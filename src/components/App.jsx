@@ -9,7 +9,7 @@ export default class App extends React.Component {
   };
 
   handleFormSubmit = query => {
-    this.setState({ query });
+    this.setState({ query, currentPage: 1 });
   };
 
   render() {

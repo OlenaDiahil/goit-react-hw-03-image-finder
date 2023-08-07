@@ -17,8 +17,9 @@ export default class ImageGallery extends React.Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.query !== this.props.query) {
-      this.setState({ images: [], currentPage: 1 });
-      this.fetchImages();
+      this.setState({ images: [], currentPage: 1 }, () => {
+        this.fetchImages(); 
+      });
     }
   }
 
@@ -28,7 +29,7 @@ export default class ImageGallery extends React.Component {
 
     this.setState({ isLoading: true });
 
-    fetchImages(query, currentPage)
+    fetchImages(query, currentPage) // Передаємо поточне значення currentPage до функції fetchImages
       .then(images => {
         this.setState(prevState => ({
           images: [...prevState.images, ...images],
@@ -50,6 +51,7 @@ export default class ImageGallery extends React.Component {
 
   render() {
     const { images, isLoading, showModal, selectedImage } = this.state;
+    const showLoadMoreButton = images.length > 0 && !isLoading;
 
     return (
       <div>
@@ -63,7 +65,7 @@ export default class ImageGallery extends React.Component {
           ))}
         </Gallery>
         {isLoading && <Loader />}
-        {images.length > 0 && <Button onClick={this.fetchImages} />}
+        {showLoadMoreButton && <Button onClick={this.fetchImages} />}
         {showModal && <Modal largeImageURL={selectedImage} onClose={this.handleCloseModal} />}
       </div>
     );
